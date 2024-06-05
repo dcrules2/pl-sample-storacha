@@ -1,6 +1,7 @@
 {
   "name": "pl-sample-storacha",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -10,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@web3-storage/w3up-client": "^14.1.1"
+    "@web3-storage/w3up-client": "^14.1.1",
+    "files-from-path": "^1.0.4",
+    "formdata-node": "^6.0.3"
   }
 }

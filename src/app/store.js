@@ -6,7 +6,7 @@ const path = require('path');
 const url = 'https://http.cat/'; // Static based on assignment
 
 // Path where the HTML file will be saved
-const filePath = path.join(__dirname, '../temp/html01.js');
+const filePath = path.join(__dirname, '../temp/html01.html');
 
 // Create the directory if it doesn't exist
 fs.mkdir(path.dirname(filePath), { recursive: true }, (err) => {
