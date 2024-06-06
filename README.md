@@ -67,12 +67,12 @@ When you're done your file directory should look similar to this. You can use th
 Next we'll create functions to download and store a websites contents. In these examples, we will be downloading the contents of `https://http.cat/` and storing them in a `temp` folder. 
 
 In the code block we go over:
-- **Setting the paths for HTML, CSS, and Images**
-- **Downloading the HTML**
-- **Downloading the Images**
+- Setting the paths for HTML, CSS, and Images
+- Downloading the HTML
+- Downloading the Images
   - Using regex to extract images
   - Using a function to check the `src` to confirm these are the images we want not icons, etc.
-- **Downloading the CSS file**
+- Downloading the CSS file
 
 
 The code can also be accessed [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/store.js).
@@ -261,11 +261,12 @@ To test this, make sure you have `store();` at the end. Then you can run either 
 Next you'll need to take your files and upload them to IPFS. This code has been made under the assumption you already have an account and a space created. If you need to learn how to make an account or create a space, please reference these [docs](https://web3.storage/docs/quickstart/).
 
 In the code block we go over:
-• Creating a client
-• Logging into your account
-• Access a ready made space through your did
-• Utlizing `uploadDirectory`
-•Returning a URL to access the IPFS directory in the console log
+- Creating a client
+- Logging into your account
+- Accessing a ready-made space through your DID
+- Utilizing `uploadDirectory`
+- Returning a URL to access the IPFS directory in the console log
+
 
 Access the full file [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/upload.js).
 
