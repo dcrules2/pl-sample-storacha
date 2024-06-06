@@ -67,18 +67,12 @@ When you're done your file directory should look similar to this. You can use th
 Next we'll create functions to download and store a websites contents. In these examples, we will be downloading the contents of `https://http.cat/` and storing them in a `temp` folder. 
 
 In the code block we go over:
-
-• Setting the paths for HTML, CSS, and Images
-
-• Downloading the HTML
-
-• Downloading the Images
-
-  • Using regex to extract images
-  
-  • Using a function to check the `src` to confirm these are the images we want not icons, etc.
-  
-• Downloading the CSS file
+- **Setting the paths for HTML, CSS, and Images**
+- **Downloading the HTML**
+- **Downloading the Images**
+  - Using regex to extract images
+  - Using a function to check the `src` to confirm these are the images we want not icons, etc.
+- **Downloading the CSS file**
 
 
 The code can also be accessed [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/store.js).
