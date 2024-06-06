@@ -74,7 +74,7 @@ In the code block we go over:
 
 The code can also be accessed [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/store.js).
 
-<details>
+<summary style="height: 200px; overflow: auto; border: 1px solid #ccc; padding: 10px;">
  
 ```
 import https from 'https';
@@ -251,7 +251,7 @@ downloadCssFromHtml(url);
 
 }
 ```
-</details>
+</summary>
 
 To test this, make sure you have `store();` at the end. Then you can run either run `node store.js` or `npm run store`.
 
@@ -268,7 +268,7 @@ In the code block we go over:
 
 Access the full file [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/upload.js).
 
-<summary>
+<summary style="height: 200px; overflow: auto; border: 1px solid #ccc; padding: 10px;">
  
 ```
 import { create } from '@web3-storage/w3up-client';
