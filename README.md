@@ -1,4 +1,4 @@
-# How to put an existing website onto web3.storage using JavaScript
+# Upload Your Website Onto IPFS
 
 web3.storage (Storacha) has robust tools to upload anything to IPFS. Use this guide in JavaScript to learn how to take a pre-exisiting website and upload all of it's contents into IPFS. The example below is just for backend. Feel free to to fork and manipulate the code samples for your needs. We have a ### Directory at the bottom where we encourage you to a PR to show off your project. Feel free to reach out in the [discord](https://discord.com/invite/KKucsCpZmY) with any comments or questions. 
 
