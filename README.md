@@ -74,7 +74,6 @@ In the code block we go over:
 
 The code can also be accessed [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/store.js).
 
-<summary style="height: 200px; overflow: auto; border: 1px solid #ccc; padding: 10px;">
  
 ```
 import https from 'https';
@@ -251,7 +250,6 @@ downloadCssFromHtml(url);
 
 }
 ```
-</summary>
 
 To test this, make sure you have `store();` at the end. Then you can run either run `node store.js` or `npm run store`.
 
@@ -268,7 +266,6 @@ In the code block we go over:
 
 Access the full file [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/upload.js).
 
-<summary style="height: 200px; overflow: auto; border: 1px solid #ccc; padding: 10px;">
  
 ```
 import { create } from '@web3-storage/w3up-client';
@@ -318,8 +315,6 @@ console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`
 
 }
 ```
-
-</summary>
 
 To test this, make sure you have `upload();` at the end. Then  can run either run `node upload.js` or `npm run upload`
 
