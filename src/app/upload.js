@@ -1,7 +1,6 @@
 import { create } from '@web3-storage/w3up-client';
-import { File } from 'formdata-node';
 
- 
+export default async function upload() {
 //Create Client
 const client = await create()
 
@@ -18,3 +17,5 @@ await client.setCurrentSpace(space.did(z6Mkvj74ZNo32vnQ6c1PohDQ3xkMgqDq7hu756KtB
   
 const directoryCid = await client.uploadDirectory('./temp/html01.html');
 console.log(`Uploaded directory with CID: ${directoryCid}`);
+
+}

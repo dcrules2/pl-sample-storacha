@@ -1,9 +1,16 @@
-const https = require('https');
-const fs = require('fs');
-const path = require('path');
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+export default function store() {
 
 // URL of the HTML page to download
 const url = 'https://http.cat/'; // Static based on assignment
+
+// Create __filename and __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Path where the HTML, Images, and CSS files will be saved
 const filePath = path.join(__dirname, '../temp/html01.html');
@@ -162,3 +169,5 @@ function downloadCssFromHtml(url) {
 
 // Start the process to download the CSS file
 downloadCssFromHtml(url);
+
+}
