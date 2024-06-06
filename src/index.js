@@ -1,7 +1,7 @@
 /* 
 The index.js File will execute both components. 
 
-First the store.cjs that will download:
+First the store.js that will download:
     HTML 
     CSS 
     Cat Images (only)
@@ -11,9 +11,9 @@ Second the upload.js will take the downloaded files & upload to as a directory t
 
 // Import functions
 import store from '../src/app/store.js';
-//import upload from '../src/app/upload.js'
+import upload from '../src/app/upload.js'
 
 //Run functions
 store();
-//await upload()
+await upload()
 
