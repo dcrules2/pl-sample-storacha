@@ -74,7 +74,7 @@ In the code block we go over:
 
 The code can also be accessed [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/store.js).
 
-<summary>
+<details>
  
 ```
 import https from 'https';
@@ -251,7 +251,7 @@ downloadCssFromHtml(url);
 
 }
 ```
-</summary>
+</details>
 
 To test this, make sure you have `store();` at the end. Then you can run either run `node store.js` or `npm run store`.
 
