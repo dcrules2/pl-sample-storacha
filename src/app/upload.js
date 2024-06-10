@@ -33,9 +33,9 @@ async function getAllFilePaths(dirPath) {
 
 // Define the root directories to scan
 const rootDirectories = [
-  path.join(process.cwd(), '..', 'temp'),
-  path.join(process.cwd(), '..', 'temp', 'images'),
-  path.join(process.cwd(), '..', 'temp', 'css')
+  path.join(process.cwd(), 'temp'),
+  path.join(process.cwd(), 'temp', 'images'),
+  path.join(process.cwd(), 'temp', 'css')
 ];
 
 // Get all file paths from the root directories
@@ -56,5 +56,3 @@ console.log(`Uploading ${allFiles.length} files`);
 const directoryCid = await client.uploadDirectory(allFiles);
 console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`);
 }
-
-upload().catch(console.error);

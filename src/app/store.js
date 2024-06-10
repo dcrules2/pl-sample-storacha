@@ -13,9 +13,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Path where the HTML, Images, and CSS files will be saved
-const filePath = path.join(__dirname, '../temp/html01.html');
-const imagesDir = path.join(__dirname, '../temp/images');
-const cssDir = path.join(__dirname, '../temp/css');
+const filePath = path.join(__dirname, 'temp/html01.html');
+const imagesDir = path.join(__dirname, 'temp/images');
+const cssDir = path.join(__dirname, 'temp/css');
 
 // Create the directory if it doesn't exist
 fs.mkdir(path.dirname(filePath), { recursive: true }, (err) => {
