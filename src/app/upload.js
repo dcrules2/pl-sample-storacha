@@ -1,4 +1,5 @@
 import { create } from '@web3-storage/w3up-client';
+import { filesFromPaths } from 'files-from-path';
 import fs from 'fs';
 import path from 'path';
 
@@ -10,37 +11,50 @@ const client = await create()
 const myAccount = await client.login('jamie.david312@gmail.com')
 
 //Set space
+await client.setCurrentSpace("did:key:z6Mkqa5W7JZQLuQ1TmmS5o1om5B2KRWZncxnwbCLFWrJm44C")
 
-/*
-Docs were unclear how to call a space already created. 
-The docs just show how to create a new space.
-Also unclear how to pass the did of a space already created.
-*/
+// Function to recursively get all file paths from a directory
+async function getAllFilePaths(dirPath) {
+  let filePaths = [];
+  const items = await fs.promises.readdir(dirPath, { withFileTypes: true });
 
-const space = await client.currentSpace("Documents")
+  for (const item of items) {
+    const fullPath = path.join(dirPath, item.name);
+    if (item.isDirectory()) {
+      const subPaths = await getAllFilePaths(fullPath);
+      filePaths = filePaths.concat(subPaths);
+    } else {
+      filePaths.push(fullPath);
+    }
+  }
 
-await myAccount.provision(space.did(z6Mkvj74ZNo32vnQ6c1PohDQ3xkMgqDq7hu756KtBZ1BnyCG))
-//running into a error here regarding space.did as undefined
-await client.setCurrentSpace(space.did(z6Mkvj74ZNo32vnQ6c1PohDQ3xkMgqDq7hu756KtBZ1BnyCG))
-
-/*
-Unclear about dependancies. I got an error with `File`.
-
-Likely need a function to cyle through all the files in ../src/temp
-to get them ready to be uploaded a directory vs blob/single file
-but I also need a way to test this before I write it all out to catch errors
-*/
-
-//Upload downloaded files; just the sample from the docs lightly edited
-
-const files = [
-    new File(['../src/temp/html01.html'], 'html01.html'),
-    new File(['../src/temp/css/'], 'css/style1.css'),
-    new File(['../src/temp/images/100.jpg'], 'images/100.jpg')
-  ]
-  
-const directoryCid = await client.uploadDirectory(files);
-//Returning a link to access the newly uploaded files
-console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`)
-
+  return filePaths;
 }
+
+// Define the root directories to scan
+const rootDirectories = [
+  path.join(process.cwd(), '..', 'temp'),
+  path.join(process.cwd(), '..', 'temp', 'images'),
+  path.join(process.cwd(), '..', 'temp', 'css')
+];
+
+// Get all file paths from the root directories
+let allFilePaths = [];
+for (const dir of rootDirectories) {
+  const filePaths = await getAllFilePaths(dir);
+  allFilePaths = allFilePaths.concat(filePaths);
+}
+
+console.log(`Found ${allFilePaths.length} files`);
+
+// Get file objects from the file paths
+const allFiles = await filesFromPaths(allFilePaths);
+
+console.log(`Uploading ${allFiles.length} files`);
+
+// Upload files to Web3.Storage
+const directoryCid = await client.uploadDirectory(allFiles);
+console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`);
+}
+
+upload().catch(console.error);
