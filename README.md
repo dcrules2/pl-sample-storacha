@@ -273,6 +273,7 @@ Access the full file [here](https://github.com/dcrules2/pl-sample-storacha/blob/
  
 ```
 import { create } from '@web3-storage/w3up-client';
+import { filesFromPaths } from 'files-from-path';
 import fs from 'fs';
 import path from 'path';
 
@@ -281,42 +282,53 @@ export default async function upload() {
 const client = await create()
 
 //Log into account
-const myAccount = await client.login('jamie.david312@gmail.com')
+const myAccount = await client.login('[INSERT_YOUR_LOGIN_EMAIL_HERE]') //replace [INSERT_YOUR_LOGIN_EMAIL_HERE] with your email
 
 //Set space
+await client.setCurrentSpace("did:key:[INSERT_YOUR_DID_HERE]") //replace [INSERT_YOUR_DID_HERE] with your space DID
 
-/*
-Docs were unclear how to call a space already created. 
-The docs just show how to create a new space.
-Also unclear how to pass the did of a space already created.
-*/
+// Function to recursively get all file paths from a directory
+async function getAllFilePaths(dirPath) {
+  let filePaths = [];
+  const items = await fs.promises.readdir(dirPath, { withFileTypes: true });
 
-const space = await client.currentSpace("Documents")
+  for (const item of items) {
+    const fullPath = path.join(dirPath, item.name);
+    if (item.isDirectory()) {
+      const subPaths = await getAllFilePaths(fullPath);
+      filePaths = filePaths.concat(subPaths);
+    } else {
+      filePaths.push(fullPath);
+    }
+  }
 
-await myAccount.provision(space.did(z6Mkvj74ZNo32vnQ6c1PohDQ3xkMgqDq7hu756KtBZ1BnyCG))
-//running into a error here regarding space.did as undefined
-await client.setCurrentSpace(space.did(z6Mkvj74ZNo32vnQ6c1PohDQ3xkMgqDq7hu756KtBZ1BnyCG))
+  return filePaths;
+}
 
-/*
-Unclear about dependancies. I got an error with `File`.
+// Define the root directories to scan
+const rootDirectories = [
+  path.join(process.cwd(), 'temp'),
+  path.join(process.cwd(), 'temp', 'images'),
+  path.join(process.cwd(), 'temp', 'css')
+];
 
-Likely need a function to cyle through all the files in ../src/temp
-to get them ready to be uploaded a directory vs blob/single file
-but I also need a way to test this before I write it all out to catch errors
-*/
+// Get all file paths from the root directories
+let allFilePaths = [];
+for (const dir of rootDirectories) {
+  const filePaths = await getAllFilePaths(dir);
+  allFilePaths = allFilePaths.concat(filePaths);
+}
 
-//Upload downloaded files; just the sample from the docs lightly edited
+console.log(`Found ${allFilePaths.length} files`);
 
-const files = [
-    new File(['../src/temp/html01.html'], 'html01.html'),
-    new File(['../src/temp/css/'], 'css/style1.css'),
-    new File(['../src/temp/images/100.jpg'], 'images/100.jpg')
-  ]
-  
-const directoryCid = await client.uploadDirectory(files);
-//Returning a link to access the newly uploaded files
-console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`)
+// Get file objects from the file paths
+const allFiles = await filesFromPaths(allFilePaths);
 
+console.log(`Uploading ${allFiles.length} files`);
+
+// Upload files to Web3.Storage
+const directoryCid = await client.uploadDirectory(allFiles);
+console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`);
 }
 ```
 
