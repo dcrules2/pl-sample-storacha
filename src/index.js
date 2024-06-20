@@ -14,6 +14,7 @@ import store from '../src/app/store.js';
 import upload from '../src/app/upload.js'
 
 //Run functions
+// Suggestion once store is asynchronous, you should await it before calling upload
 store();
 await upload()
 

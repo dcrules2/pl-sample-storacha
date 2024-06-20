@@ -1,2 +1,5 @@
+# you added node_modules to the git ignore, 
+# but only after you checked them in -- you should
+# remove them
 node_modules/      
 src/temp/images/  

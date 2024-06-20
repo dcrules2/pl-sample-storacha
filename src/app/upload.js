@@ -31,6 +31,9 @@ async function getAllFilePaths(dirPath) {
   return filePaths;
 }
 
+// Suggestion: given getAllFilePaths appears to work recursively on sub directories, you probably do not need
+// to add the `images` and `css` directories as well
+
 // Define the root directories to scan
 const rootDirectories = [
   path.join(process.cwd(), 'temp'),
