@@ -1,175 +1,113 @@
-import https from 'https';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import cheerio from 'cheerio';
 import axios from 'axios';
-
-export default async function store() {
+import * as cheerio from 'cheerio';
 
 // URL of the HTML page to download
-const url = 'https://http.cat/'; // Static based on assignment
+const url = 'https://http.cat/';
 
 // Create __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Path where the HTML, Images, and CSS files will be saved
-const filePath = path.join(__dirname, 'temp/index.html');
-const imagesDir = path.join(__dirname, 'temp/images');
-const cssDir = path.join(__dirname, 'temp/css');
+const folderPath = path.join(__dirname, 'temp');
+const imagesDir = path.join(folderPath, 'images');
 
-// Create the directory if it doesn't exist
-fs.mkdir(path.dirname(filePath), { recursive: true }, (err) => {
-    if (err) {
-        return console.error(`Failed to create directory: ${err.message}`);
+// Function to create directories if they don't exist
+async function createDirectories() {
+    try {
+        await fs.mkdir(folderPath, { recursive: true });
+        console.log(`Directory created or already exists: ${folderPath}`);
+        
+        await fs.mkdir(imagesDir, { recursive: true });
+        console.log(`Images directory created or already exists: ${imagesDir}`);
+    } catch (error) {
+        console.error('Error creating directories:', error);
+        throw error; // Rethrow the error to handle it elsewhere
     }
-
-    // Download the HTML page
-    https.get(url, (response) => {
-        if (response.statusCode !== 200) {
-            return console.error(`Failed to get '${url}' (${response.statusCode})`);
-        }
-
-        // Save the response to a file
-        const file = fs.createWriteStream(filePath);
-        response.pipe(file);
-
-        file.on('finish', () => {
-            file.close();
-            console.log('Download completed!');
-        });
-    }).on('error', (err) => {
-        console.error(`Error during HTTP request: ${err.message}`);
-    });
-});
-
-// Function to download an image
-function downloadImage(imageUrl, savePath) {
-    https.get(imageUrl, (response) => {
-        if (response.statusCode !== 200) {
-            return console.error(`Failed to get '${imageUrl}' (${response.statusCode})`);
-        }
-
-        // Save the image
-        const file = fs.createWriteStream(savePath);
-        response.pipe(file);
-
-        file.on('finish', () => {
-            file.close();
-            console.log(`Downloaded ${imageUrl}`);
-        });
-    }).on('error', (err) => {
-        console.error(`Error during HTTP request: ${err.message}`);
-    });
 }
 
-// Function to download HTML page and extract images using regex
-function downloadImagesFromHtml(url) {
-    https.get(url, (response) => {
-        if (response.statusCode !== 200) {
-            return console.error(`Failed to get '${url}' (${response.statusCode})`);
-        }
-
-        let html = '';
-
-        // Accumulate the HTML data
-        response.on('data', (chunk) => {
-            html += chunk;
-        });
-
-        // Process the HTML once fully received
-        response.on('end', () => {
-            // Regex pattern to match image src attributes
-            const imgRegex = /<img[^>]+src=["']([^"']+)["']/gi;
-            let match;
-
-            // Ensure the directory exists
-            fs.mkdir(imagesDir, { recursive: true }, (err) => {
-                if (err) {
-                    return console.error(`Failed to create directory: ${err.message}`);
-                }
-
-                // Iterate over matched image src attributes and download images
-                while ((match = imgRegex.exec(html)) !== null) {
-                    const imageUrl = new URL(match[1], url).href;
-                    if (imageUrl.startsWith('https://http.cat/images/')) {
-                        const imageName = path.basename(imageUrl);
-                        const savePath = path.join(imagesDir, imageName);
-                        downloadImage(imageUrl, savePath);
-                    }
-                }
-            });
-        });
-    }).on('error', (err) => {
-        console.error(`Error during HTTP request: ${err.message}`);
-    });
+// Function to download the HTML
+async function downloadHTML(url) {
+    try {
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error) {
+        console.error('Error downloading the HTML:', error);
+        throw error; // Rethrow the error to handle it elsewhere
+    }
 }
 
-// Start the process for downloading Images
-downloadImagesFromHtml(url);
-
-// Function to download a CSS file
-function downloadCss(cssUrl, savePath) {
-    https.get(cssUrl, (response) => {
-        if (response.statusCode !== 200) {
-            return console.error(`Failed to get '${cssUrl}' (${response.statusCode})`);
-        }
-
-        // Save the CSS file
-        const file = fs.createWriteStream(savePath);
-        response.pipe(file);
-
-        file.on('finish', () => {
-            file.close();
-            console.log(`Downloaded ${cssUrl}`);
-        });
-    }).on('error', (err) => {
-        console.error(`Error during HTTP request: ${err.message}`);
-    });
+// Function to save HTML to a file
+async function saveHTMLToFile(html) {
+    const filePath = path.join(folderPath, 'index.html');
+    try {
+        await fs.writeFile(filePath, html);
+        console.log(`HTML downloaded and saved to ${filePath}`);
+        return filePath;
+    } catch (error) {
+        console.error('Error saving HTML to file:', error);
+        throw error; // Rethrow the error to handle it elsewhere
+    }
 }
 
-// Function to download HTML page and extract CSS links using regex
-function downloadCssFromHtml(url) {
-    https.get(url, (response) => {
-        if (response.statusCode !== 200) {
-            return console.error(`Failed to get '${url}' (${response.statusCode})`);
-        }
+// Function to scrape images from the HTML content
+async function scrapeImages(htmlFilePath) {
+    try {
+        const html = await fs.readFile(htmlFilePath, 'utf-8');
+        const $ = cheerio.load(html);
+        const imgElements = $('img');
 
-        let html = '';
-
-        // Accumulate the HTML data
-        response.on('data', (chunk) => {
-            html += chunk;
+        const imgPromises = [];
+        imgElements.each((index, element) => {
+            const imgUrl = $(element).attr('src');
+            if (imgUrl) {
+                const absoluteUrl = imgUrl.startsWith('http') ? imgUrl : `https://http.cat${imgUrl}`;
+                const filename = path.basename(imgUrl);
+                const filepath = path.join(imagesDir, filename);
+                imgPromises.push(downloadImage(absoluteUrl, filepath));
+            }
         });
 
-        // Process the HTML once fully received
-        response.on('end', () => {
-            // Regex pattern to match CSS link tags
-            const cssRegex = /<link[^>]+rel=["']stylesheet["'][^>]+href=["']([^"']+)["']/gi;
-            let match;
+        await Promise.all(imgPromises);
+        console.log('All images downloaded successfully');
+    } catch (error) {
+        console.error('Error scraping images:', error);
+        throw error; // Rethrow the error to handle it elsewhere
+    }
+}
 
-            // Ensure the directory exists
-            fs.mkdir(cssDir, { recursive: true }, (err) => {
-                if (err) {
-                    return console.error(`Failed to create directory: ${err.message}`);
-                }
-
-                // Iterate over matched CSS link tags and download CSS files
-                while ((match = cssRegex.exec(html)) !== null) {
-                    const cssUrl = new URL(match[1], url).href;
-                    const cssName = path.basename(cssUrl);
-                    const savePath = path.join(cssDir, cssName);
-                    downloadCss(cssUrl, savePath);
-                }
-            });
+// Function to download and save images
+async function downloadImage(url, filepath) {
+    try {
+        const response = await axios({
+            url,
+            method: 'GET',
+            responseType: 'arraybuffer' // Ensure binary data handling
         });
-    }).on('error', (err) => {
-        console.error(`Error during HTTP request: ${err.message}`);
-    });
+
+        await fs.writeFile(filepath, response.data);
+        console.log(`Image downloaded successfully: ${filepath}`);
+    } catch (error) {
+        console.error(`Error downloading image from ${url}:`, error);
+        throw error; // Rethrow the error to handle it elsewhere
+    }
 }
 
-// Start the process to download the CSS file
-downloadCssFromHtml(url);
-
+// Function to orchestrate the download and scraping
+export default async function store() {
+    try {
+        await createDirectories();
+        const html = await downloadHTML(url); // Pass the url here
+        const htmlFilePath = await saveHTMLToFile(html);
+        await scrapeImages(htmlFilePath);
+        console.log('HTML and images processing completed successfully.');
+    } catch (error) {
+        console.error('Error storing the data:', error);
+    }
 }
+
+// Start the process by calling store()
+store();

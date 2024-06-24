@@ -9,11 +9,18 @@ First the store.js that will download:
 Second the upload.js will take the downloaded files & upload to as a directory to web3.storage
 */
 
-// Import functions
-import store from '../src/app/store.js';
-import upload from '../src/app/upload.js'
+import store from '../scratch/test2.js';
+import upload from '../src/app/upload.js';
 
-//Run functions
-store();
-await upload()
+export default async function run() {
+    try {
+        await store(); // Wait for store() to complete
+        await upload(); // Wait for upload() to complete
+        console.log('Upload completed successfully');
+    } catch (error) {
+        console.error('Error uploading files:', error);
+    }
+}
+
+run();
 
