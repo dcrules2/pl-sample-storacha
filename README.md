@@ -14,6 +14,10 @@ Install the latest version of w3cli
 
  ```npm install -g @web3-storage/w3cli```
 
+ Install `fs`, `axios`, and `cheerio`.
+
+ ```npm install fs axios cheerio```
+
  ## Set Up
 
 Initialize a new Node.js project:
