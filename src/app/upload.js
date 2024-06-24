@@ -34,8 +34,7 @@ async function getAllFilePaths(dirPath) {
 // Define the root directories to scan
 const rootDirectories = [
   path.join(process.cwd(), 'app', 'temp'),
-  path.join(process.cwd(), 'app', 'temp', 'images'),
-  // path.join(process.cwd(), 'temp', 'css')
+  path.join(process.cwd(), 'app', 'temp', 'assets'),
 ];
 
 // Get all file paths from the root directories

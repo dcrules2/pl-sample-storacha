@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { fileURLToPath } from 'url';
 
 // URL of the HTML page to download
 const url = 'https://http.cat/';
@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename);
 
 // Path where the HTML, Images, and CSS files will be saved
 const folderPath = path.join(__dirname, 'temp');
-const imagesDir = path.join(folderPath, 'images');
+const assetsDir = path.join(folderPath, 'assets');
 
 // Function to create directories if they don't exist
 async function createDirectories() {
@@ -21,8 +21,8 @@ async function createDirectories() {
         await fs.mkdir(folderPath, { recursive: true });
         console.log(`Directory created or already exists: ${folderPath}`);
         
-        await fs.mkdir(imagesDir, { recursive: true });
-        console.log(`Images directory created or already exists: ${imagesDir}`);
+        await fs.mkdir(assetsDir, { recursive: true });
+        console.log(`Assets directory created or already exists: ${assetsDir}`);
     } catch (error) {
         console.error('Error creating directories:', error);
         throw error; // Rethrow the error to handle it elsewhere
@@ -53,46 +53,86 @@ async function saveHTMLToFile(html) {
     }
 }
 
-// Function to scrape images from the HTML content
-async function scrapeImages(htmlFilePath) {
+// Function to scrape images, stylesheets, and scripts from the HTML content
+async function scrapeResources(htmlFilePath) {
     try {
         const html = await fs.readFile(htmlFilePath, 'utf-8');
         const $ = cheerio.load(html);
-        const imgElements = $('img');
+        
+        // Select img, link, and script elements
+        const elements = $('img, link, script');
 
-        const imgPromises = [];
-        imgElements.each((index, element) => {
-            const imgUrl = $(element).attr('src');
-            if (imgUrl) {
-                const absoluteUrl = imgUrl.startsWith('http') ? imgUrl : `https://http.cat${imgUrl}`;
-                const filename = path.basename(imgUrl);
-                const filepath = path.join(imagesDir, filename);
-                imgPromises.push(downloadImage(absoluteUrl, filepath));
+        const downloadPromises = [];
+        const updates = []; // Store updates to apply to HTML
+
+        elements.each((index, element) => {
+            let resourceUrl, attribute, originalUrl;
+            
+            if (element.tagName === 'img') {
+                attribute = 'src';
+            } else if (element.tagName === 'link') {
+                attribute = 'href';
+            } else if (element.tagName === 'script') {
+                attribute = 'src';
             }
+
+            originalUrl = $(element).attr(attribute);
+            if (!originalUrl) {
+                console.warn(`Element ${element.tagName} at index ${index} does not have a valid ${attribute} attribute.`);
+                return; // Skip this element if attribute is missing
+            }
+
+            resourceUrl = originalUrl.startsWith('http') ? originalUrl : `${url}${originalUrl}`;
+            
+            const filename = path.basename(originalUrl);
+            const localPath = `/assets/${filename}`;
+
+            updates.push({
+                element,
+                attribute,
+                originalUrl,
+                localPath
+            });
+
+            const absoluteUrl = resourceUrl.startsWith('http') ? resourceUrl : `${url}${resourceUrl}`;
+            const filepath = path.join(assetsDir, filename);
+                
+            downloadPromises.push(downloadResource(absoluteUrl, filepath));
         });
 
-        await Promise.all(imgPromises);
-        console.log('All images downloaded successfully');
+        await Promise.all(downloadPromises);
+
+        // Update HTML with local paths
+        updates.forEach(({ element, attribute, localPath }) => {
+            $(element).attr(attribute, localPath);
+        });
+
+        const updatedHtml = $.html();
+
+        // Save updated HTML back to file
+        await fs.writeFile(htmlFilePath, updatedHtml);
+        console.log('HTML updated successfully.');
+
     } catch (error) {
-        console.error('Error scraping images:', error);
-        throw error; // Rethrow the error to handle it elsewhere
+        console.error('Error scraping resources:', error);
+        throw error;
     }
 }
 
-// Function to download and save images
-async function downloadImage(url, filepath) {
+// Function to download and save resources (images, stylesheets, scripts)
+async function downloadResource(url, filepath) {
     try {
         const response = await axios({
             url,
             method: 'GET',
-            responseType: 'arraybuffer' // Ensure binary data handling
+            responseType: 'arraybuffer'
         });
 
         await fs.writeFile(filepath, response.data);
-        console.log(`Image downloaded successfully: ${filepath}`);
+        console.log(`Resource downloaded successfully: ${filepath}`);
     } catch (error) {
-        console.error(`Error downloading image from ${url}:`, error);
-        throw error; // Rethrow the error to handle it elsewhere
+        console.error(`Error downloading resource from ${url}:`, error);
+        throw error;
     }
 }
 
@@ -101,9 +141,12 @@ export default async function store() {
     try {
         await createDirectories();
         const html = await downloadHTML(url); // Pass the url here
+        if (!html) {
+            throw new Error('Downloaded HTML content is empty.');
+        }
         const htmlFilePath = await saveHTMLToFile(html);
-        await scrapeImages(htmlFilePath);
-        console.log('HTML and images processing completed successfully.');
+        await scrapeResources(htmlFilePath);
+        console.log('HTML and resources processing completed successfully.');
     } catch (error) {
         console.error('Error storing the data:', error);
     }
