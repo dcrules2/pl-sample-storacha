@@ -1,4 +1,4 @@
-# Upload Your Website Onto IPFS
+# Upload a Website Onto IPFS
 
 web3.storage (Storacha) has robust tools to upload anything to IPFS. Use this guide in JavaScript to learn how to take scrape a website and upload all of it's contents into IPFS. By the end, your IPFS link opened in browser will display the original website you accessed within certain limits. The example below is just for backend. Feel free to to fork and manipulate the code samples for your needs. We have a [directory](https://github.com/dcrules2/pl-sample-storacha/blob/main/README.md#directory) at the bottom where we encourage you to a PR to show off your project. Feel free to reach out in the [Discord](https://discord.com/invite/KKucsCpZmY) with any comments or questions. 
 
