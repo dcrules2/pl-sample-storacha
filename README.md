@@ -1,6 +1,6 @@
 # Upload Your Website Onto IPFS
 
-web3.storage (Storacha) has robust tools to upload anything to IPFS. Use this guide in JavaScript to learn how to take a pre-exisiting website and upload all of it's contents into IPFS. The example below is just for backend. Feel free to to fork and manipulate the code samples for your needs. We have a [directory](https://github.com/dcrules2/pl-sample-storacha/blob/main/README.md#directory) at the bottom where we encourage you to a PR to show off your project. Feel free to reach out in the [Discord](https://discord.com/invite/KKucsCpZmY) with any comments or questions. 
+web3.storage (Storacha) has robust tools to upload anything to IPFS. Use this guide in JavaScript to learn how to take scrape a website and upload all of it's contents into IPFS. By the end, your IPFS link opened in browser will display the original website you accessed within certain limits. The example below is just for backend. Feel free to to fork and manipulate the code samples for your needs. We have a [directory](https://github.com/dcrules2/pl-sample-storacha/blob/main/README.md#directory) at the bottom where we encourage you to a PR to show off your project. Feel free to reach out in the [Discord](https://discord.com/invite/KKucsCpZmY) with any comments or questions. 
 
 Access the full assignment requirements [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/instructions.txt).
 
@@ -11,12 +11,15 @@ Node.js version 18 or higher and npm version 7 or higher to complete this guide.
 ```node --version && npm --version```
 
 Install the following dependencies:
-- `@web3-storage/w3cli`
-- `fs`
-- `axios`
-- `cheerio`
-- `files-from-path`
--
+- `@web3-storage/w3cli` //IPFS Client
+- `fs` //File System
+- `axios` //HTTP Requests
+- `cheerio` //HTML Parser
+- `files-from-path` //Directory Parser
+
+```
+npm install @web3-storage/w3up-client fs axios cheerio files-from-path
+```
 
  ## Set Up
 
@@ -33,7 +36,7 @@ Check your `package.json` look similar to this. Take note that I have `"type": "
   "type": "module",
   "description": "",
   "main": "src/index.js",
-  "scripts": {    
+  "scripts": {
     "start": "node src/index.js",
     "store": "node src/app/store.js",
     "upload": "node src/app/upload.js"
@@ -43,13 +46,15 @@ Check your `package.json` look similar to this. Take note that I have `"type": "
   "license": "ISC",
   "dependencies": {
     "@web3-storage/w3up-client": "^14.1.1",
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
     "files-from-path": "^1.0.4",
     "formdata-node": "^6.0.3"
   }
 }
 ```
 
-When you're done your file directory should look similar to this. You can use the CLI or your preferred method to add the other files.
+When you're done your file directory should look similar to this. You can use the CLI or your preferred method to add the other files. Our functions will create the `temp` directory so you don't need to add it now.
 
 ```
 ├── node_modules
@@ -57,7 +62,6 @@ When you're done your file directory should look similar to this. You can use th
 │   ├── app
 │   ├── store.js
 │   └── upload.js
-├── temp
 ├── .gitattributes
 ├── .gitignore
 ├── LICENSE
@@ -68,15 +72,33 @@ When you're done your file directory should look similar to this. You can use th
 
 ## Extract a Websites Data
 
-Next we'll create functions to download and store a websites contents. In these examples, we will be downloading the contents of `https://http.cat/` and storing them in a `temp` folder. 
+Next we'll create functions to download and store a websites contents. In these examples, we will be downloading the contents of `https://http.cat/` and storing them in a `temp` folder. Below is an overview of what we are doing and what part of the stack we use to accomplish this.
 
-In the code block we go over:
-- Setting the paths for HTML, CSS, and Images
-- Downloading the HTML
-- Downloading the Images
-  - Using regex to extract images
-  - Using a function to check the `src` to confirm these are the images we want not icons, etc.
-- Downloading the CSS file
+- **Create Directories**
+  - **Technology**: Node.js `fs` module (`fs.promises.mkdir`)
+  - **Description**: Ensures the main `temp` folder and the `assets` subfolder exist, creating them if necessary.
+
+- **Download HTML Content**
+  - **Library**: Axios (`axios.get`)
+  - **Description**: Fetches the HTML content from a specified URL (`https://http.cat/`).
+
+- **Save HTML to File**
+  - **Technology**: Node.js `fs` module (`fs.promises.writeFile`)
+  - **Description**: Saves the downloaded HTML content to a file (`index.html`) in the `temp` folder.
+
+- **Parse HTML and Scrape Resources**
+  - **Library**: Cheerio (`cheerio.load`)
+  - **Description**: Parses the HTML content to identify and extract links to images, stylesheets, and scripts.
+
+- **Download and Save Resources**
+  - **Library**: Axios (`axios`)
+  - **Technology**: Node.js `fs` module (`fs.promises.writeFile`)
+  - **Description**: Downloads the identified resources (images, stylesheets, scripts) and saves them to the `assets` subfolder.
+
+- **Update HTML with Local Paths**
+  - **Library**: Cheerio (`$().attr`)
+  - **Technology**: Node.js `fs` module (`fs.promises.writeFile`)
+  - **Description**: Updates the HTML content to replace resource URLs with local file paths and saves the modified HTML back to `index.html`.
 
 
 The code can also be accessed [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/store.js).
@@ -236,23 +258,39 @@ export default async function store() {
         console.error('Error storing the data:', error);
     }
 }
-
-// Start the process by calling store()
-store();
 ```
 
 To test this, make sure you have `store();` at the end. Then you can run either run `node store.js` or `npm run store`.
 
 ## Upload to IPFS
 
-Next you'll need to take your files and upload them to IPFS. This code has been made under the assumption you already have an account and a space created. If you need to learn how to make an account or create a space, please reference these [docs](https://web3.storage/docs/quickstart/).
+Note: This code has been made under the assumption you already have an account and a space created. If you need to learn how to make an account or create a space, please reference these [docs](https://web3.storage/docs/quickstart/).
 
-In the code block we go over:
-- Creating a client
-- Logging into your account
-- Accessing a ready-made space through your DID
-- Utilizing `uploadDirectory`
-- Returning a URL to access the IPFS directory in the console log
+Next you'll need to take your files and upload them to IPFS. Overall, the `upload` function handles logging into Web3 Storage, collecting files from the local `temp` directory, converting them to file objects, and uploading them to Web3.Storage.
+
+- **Create Client**
+  - **Library**: `@web3-storage/w3up-client` (`create`)
+  - **Description**: Initializes the Web3 Storage client.
+
+- **Log into Account**
+  - **Library**: `@web3-storage/w3up-client` (`client.login`)
+  - **Description**: Logs into a Web3 Storage account using the provided email.
+
+- **Set Space**
+  - **Library**: `@web3-storage/w3up-client` (`client.setCurrentSpace`)
+  - **Description**: Sets the current space for the Web3 Storage client.
+
+- **Get All File Paths**
+  - **Technology**: Node.js `fs` module (`fs.promises.readdir`)
+  - **Description**: Recursively retrieves all file paths from the specified root directories (`temp`).
+
+- **Convert File Paths to File Objects**
+  - **Library**: `files-from-path` (`filesFromPaths`)
+  - **Description**: Converts the collected file paths into file objects that can be uploaded.
+
+- **Upload Files to Web3.Storage**
+  - **Library**: `@web3-storage/w3up-client` (`client.uploadDirectory`)
+  - **Description**: Uploads the file objects to Web3.Storage as a directory and retrieves the Content Identifier (CID).
 
 
 Access the full file [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/src/app/upload.js).
@@ -265,60 +303,56 @@ import fs from 'fs';
 import path from 'path';
 
 export default async function upload() {
-//Create Client
-const client = await create()
+  // Create Client
+  const client = await create();
 
-//Log into account
-const myAccount = await client.login('jamie.david312@gmail.com')
+  // Log into account
+  const myAccount = await client.login('jamie.david312@gmail.com');
 
-//Set space
-await client.setCurrentSpace("did:key:z6Mkqa5W7JZQLuQ1TmmS5o1om5B2KRWZncxnwbCLFWrJm44C")
+  // Set space
+  await client.setCurrentSpace("did:key:z6Mkqa5W7JZQLuQ1TmmS5o1om5B2KRWZncxnwbCLFWrJm44C");
 
-// Function to recursively get all file paths from a directory
-async function getAllFilePaths(dirPath) {
-  let filePaths = [];
-  const items = await fs.promises.readdir(dirPath, { withFileTypes: true });
+  // Function to recursively get all file paths from a directory
+  async function getAllFilePaths(dirPath) {
+    let filePaths = [];
+    const items = await fs.promises.readdir(dirPath, { withFileTypes: true });
 
-  for (const item of items) {
-    const fullPath = path.join(dirPath, item.name);
-    if (item.isDirectory()) {
-      const subPaths = await getAllFilePaths(fullPath);
-      filePaths = filePaths.concat(subPaths);
-    } else {
-      filePaths.push(fullPath);
+    for (const item of items) {
+      const fullPath = path.join(dirPath, item.name);
+      if (item.isDirectory()) {
+        const subPaths = await getAllFilePaths(fullPath);
+        filePaths = filePaths.concat(subPaths);
+      } else {
+        filePaths.push(fullPath);
+      }
     }
+
+    return filePaths;
   }
 
-  return filePaths;
+  // Define the root directories to scan
+  const rootDirectories = [
+    path.join(process.cwd(), 'app', 'temp')
+  ];
+
+  // Get all file paths from the root directories
+  let allFilePaths = [];
+  for (const dir of rootDirectories) {
+    const filePaths = await getAllFilePaths(dir);
+    allFilePaths = allFilePaths.concat(filePaths);
+  }
+
+  console.log(`Found ${allFilePaths.length} files`);
+
+  // Get file objects from the file paths
+  const allFiles = await filesFromPaths(allFilePaths);
+
+  console.log(`Uploading ${allFiles.length} files`);
+
+  // Upload files to Web3.Storage
+  const directoryCid = await client.uploadDirectory(allFiles);
+  console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`);
 }
-
-// Define the root directories to scan
-const rootDirectories = [
-  path.join(process.cwd(), 'app', 'temp'),
-  path.join(process.cwd(), 'app', 'temp', 'assets'),
-];
-
-// Get all file paths from the root directories
-let allFilePaths = [];
-for (const dir of rootDirectories) {
-  const filePaths = await getAllFilePaths(dir);
-  allFilePaths = allFilePaths.concat(filePaths);
-}
-
-console.log(`Found ${allFilePaths.length} files`);
-
-// Get file objects from the file paths
-const allFiles = await filesFromPaths(allFilePaths);
-
-console.log(`Uploading ${allFiles.length} files`);
-
-// Upload files to Web3.Storage
-const directoryCid = await client.uploadDirectory(allFiles);
-console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`);
-}
-
-// Start the process by calling upload()
-upload();
 ```
 
 To test this, make sure you have `upload();` at the end. Then  can run either run `node upload.js` or `npm run upload`

@@ -17,7 +17,6 @@
     "axios": "^1.7.2",
     "cheerio": "^1.0.0-rc.12",
     "files-from-path": "^1.0.4",
-    "formdata-node": "^6.0.3",
-    "path": "^0.12.7"
+    "formdata-node": "^6.0.3"
   }
 }
