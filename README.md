@@ -267,7 +267,7 @@ To test this, make sure you have `store();` at the end and run `node store`. Ens
 
 ## Upload to IPFS
 
-Note: This code has been made under the assumption you already have an account and a space created. If you need to learn how to make an account or create a space, please reference these [docs](https://web3.storage/docs/quickstart/).
+*Note: This code has been made under the assumption you already have an account and a space created. If you need to learn how to make an account or create a space, please reference these [docs](https://web3.storage/docs/quickstart/).*
 
 Next you'll need to take your files and upload them to IPFS. The `upload` function handles logging into Web3 Storage, collecting files from the local `temp` directory, converting them to file objects, and uploading them to Web3.Storage.
 
