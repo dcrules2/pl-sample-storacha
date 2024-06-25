@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
 // Load environment variables from .env in root directory
-dotenv.config({ path: '../../.env' });
+dotenv.config({ path: '../.env' });
 
 // URL of the HTML page to download
 const url = process.env.WEBSITE;
@@ -155,4 +155,3 @@ export default async function store() {
         console.error('Error storing the data:', error);
     }
 }
-store();
