@@ -70,7 +70,7 @@ When you're done your file directory should look similar to this. You can use th
 └── README.md
 ```
 
-## Extract a Websites Data
+## Extract Website's Data
 
 Next we'll create functions to download and store a websites contents. In these examples, we will be downloading the contents of `https://http.cat/` and storing them in a `temp` folder. Below is an overview of what we are doing and what part of the stack we use to accomplish this.
 
