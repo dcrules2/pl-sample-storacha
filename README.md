@@ -71,7 +71,7 @@ When you're done your file directory should look similar to this. You can use th
 └── README.md
 ```
 
-Make sure your `.env` file it ready to go with the variable you need. This allows this project to be dynamic to use other accounts or upload other websites without hardcode changes. This is a sample of what your env file could look like. You can find the sample file to adjust [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/.env.example).
+Make sure your `.env` file it ready to go with the variable you need. This allows this project to be dynamic. You can use other accounts or upload other websites without hardcode changes. This is a sample of what your env file could look like. You can find the sample file to adjust [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/.env.example).
 ```
 WEBSITE='https://http.cat' # Example: https://http.cat/
 EMAIL='thisismyemail123@mail.co' # Use the email address you used to create your Web3.Storage account
