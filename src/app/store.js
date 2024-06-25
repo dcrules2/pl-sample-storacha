@@ -155,3 +155,4 @@ export default async function store() {
         console.error('Error storing the data:', error);
     }
 }
+store();

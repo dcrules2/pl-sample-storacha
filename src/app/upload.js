@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 export default async function upload() {
   // Load environment variables from .env
-  dotenv.config();  
+  require('dotenv').config(); 
 
   // Create Client
   const client = await create();
