@@ -58,8 +58,9 @@ When you're done your file directory should look similar to this. You can use th
 ├── node_modules
 ├── src
 │   ├── app
-│   ├── store.js
-│   └── upload.js
+│   │   ├── store.js
+│   │   └── upload.js
+│   └── index.js
 ├── .env
 ├── .gitattributes
 ├── .gitignore
@@ -109,14 +110,13 @@ import path from 'path';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 
 // Load environment variables from .env in root directory
-//Will need to change this path if running from this directory vs src
-dotenv.config({ path: '../.env' }); 
+dotenv.config({ path: '../.env' }); //will need to change this path if running from this directory
 
 // URL of the HTML page to download
-const url = process.env.WEBSITE; //We are using 'https://http.cat/' as an example
+const url = process.env.WEBSITE;
 
 // Create __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -305,6 +305,7 @@ import { create } from '@web3-storage/w3up-client';
 import { filesFromPaths } from 'files-from-path';
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
 
 export default async function upload() {
   // Load environment variables from .env in root directory
@@ -315,10 +316,10 @@ export default async function upload() {
   const client = await create();
 
   // Log into account
-  const myAccount = await client.login(process.env.EMAIL); //Set this in your .env file
+  const myAccount = await client.login(process.env.EMAIL);
 
   // Set space
-  await client.setCurrentSpace(process.env.SPACE); //Set this in your .env file
+  await client.setCurrentSpace(process.env.SPACE);
 
   // Function to recursively get all file paths from a directory
   async function getAllFilePaths(dirPath) {
