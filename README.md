@@ -2,7 +2,7 @@
 
 web3.storage (Storacha) has robust tools to upload anything to IPFS. Use this guide in JavaScript to learn how to take scrape a website and upload all of it's contents into IPFS. By the end, your IPFS link opened in browser will display the original website you accessed within certain limits. The example below is just for backend. Feel free to to fork and manipulate the code samples for your needs. We have a [directory](https://github.com/dcrules2/pl-sample-storacha/blob/main/README.md#directory) at the bottom where we encourage you to a PR to show off your project. Feel free to reach out in the [Discord](https://discord.com/invite/KKucsCpZmY) with any comments or questions. 
 
-Access the full assignment requirements [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/instructions.txt).
+Access the full assignment requirements [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/assignment-instructions.txt).
 
 ## Dependancies
 
@@ -11,11 +11,11 @@ Node.js version 18 or higher and npm version 7 or higher to complete this guide.
 ```node --version && npm --version```
 
 Install the following dependencies:
-- `@web3-storage/w3cli` //IPFS Client
-- `fs` //File System
-- `axios` //HTTP Requests
-- `cheerio` //HTML Parser
-- `files-from-path` //Directory Parser
+- `@web3-storage/w3cli` IPFS Client
+- `fs` File System
+- `axios` HTTP Requests
+- `cheerio` HTML Parser
+- `files-from-path` Directory Parser
 
 ```
 npm install @web3-storage/w3up-client fs axios cheerio files-from-path
@@ -70,7 +70,7 @@ When you're done your file directory should look similar to this. You can use th
 └── README.md
 ```
 
-## Extract a Websites Data
+## Extract Website's Data
 
 Next we'll create functions to download and store a websites contents. In these examples, we will be downloading the contents of `https://http.cat/` and storing them in a `temp` folder. Below is an overview of what we are doing and what part of the stack we use to accomplish this.
 
@@ -266,7 +266,7 @@ To test this, make sure you have `store();` at the end. Then you can run either 
 
 Note: This code has been made under the assumption you already have an account and a space created. If you need to learn how to make an account or create a space, please reference these [docs](https://web3.storage/docs/quickstart/).
 
-Next you'll need to take your files and upload them to IPFS. Overall, the `upload` function handles logging into Web3 Storage, collecting files from the local `temp` directory, converting them to file objects, and uploading them to Web3.Storage.
+Next you'll need to take your files and upload them to IPFS. The `upload` function handles logging into Web3 Storage, collecting files from the local `temp` directory, converting them to file objects, and uploading them to Web3.Storage.
 
 - **Create Client**
   - **Library**: `@web3-storage/w3up-client` (`create`)
