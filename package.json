@@ -16,6 +16,7 @@
     "@web3-storage/w3up-client": "^14.1.1",
     "axios": "^1.7.2",
     "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
     "files-from-path": "^1.0.4",
     "formdata-node": "^6.0.3"
   }

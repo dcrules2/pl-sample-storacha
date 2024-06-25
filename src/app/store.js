@@ -3,9 +3,10 @@ import path from 'path';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
 
 // URL of the HTML page to download
-const url = 'https://http.cat/';
+const url = process.env.WEBSITE;
 
 // Create __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);

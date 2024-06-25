@@ -16,9 +16,10 @@ Install the following dependencies:
 - `axios` //HTTP Requests
 - `cheerio` //HTML Parser
 - `files-from-path` //Directory Parser
+- `dotenv` //Environment Variables
 
 ```
-npm install @web3-storage/w3up-client fs axios cheerio files-from-path
+npm install @web3-storage/w3up-client fs axios cheerio files-from-path dotenv
 ```
 
  ## Set Up
@@ -48,6 +49,7 @@ Check your `package.json` look similar to this. Take note that I have `"type": "
     "@web3-storage/w3up-client": "^14.1.1",
     "axios": "^1.7.2",
     "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
     "files-from-path": "^1.0.4",
     "formdata-node": "^6.0.3"
   }
@@ -110,9 +112,10 @@ import path from 'path';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
 
 // URL of the HTML page to download
-const url = 'https://http.cat/';
+const url = process.env.WEBSITE; //We are using 'https://http.cat/' as an example
 
 // Create __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -307,10 +310,10 @@ export default async function upload() {
   const client = await create();
 
   // Log into account
-  const myAccount = await client.login('jamie.david312@gmail.com');
+  const myAccount = await client.login(process.env.EMAIL); //Set this in your .env file
 
   // Set space
-  await client.setCurrentSpace("did:key:z6Mkqa5W7JZQLuQ1TmmS5o1om5B2KRWZncxnwbCLFWrJm44C");
+  await client.setCurrentSpace(process.env.SPACE); //Set this in your .env file
 
   // Function to recursively get all file paths from a directory
   async function getAllFilePaths(dirPath) {
