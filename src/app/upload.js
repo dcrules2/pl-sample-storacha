@@ -54,6 +54,3 @@ export default async function upload() {
   const directoryCid = await client.uploadDirectory(allFiles);
   console.log(`Uploaded directory with CID: https://${directoryCid}.ipfs.w3s.link`);
 }
-
-//run the upload function
-upload();

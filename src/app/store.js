@@ -151,6 +151,3 @@ export default async function store() {
         console.error('Error storing the data:', error);
     }
 }
-
-// Start the process by calling store()
-store();
