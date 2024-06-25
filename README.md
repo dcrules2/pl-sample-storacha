@@ -264,7 +264,7 @@ export default async function store() {
 }
 ```
 
-To test this, make sure you have `store();` at the end and run `node store`. Ensure you're in the `app` directory otherwise adjust the path accordingly.
+To test this, make sure you have `store();` at the end and run `node store`. Ensure you're in the `app` directory otherwise adjust the path accordingly. If you run into an error related to .env, please check the path in the `dotenv.config()` function.
 
 ## Upload to IPFS
 
@@ -363,7 +363,7 @@ export default async function upload() {
 }
 ```
 
-To test this, make sure you have `upload();` at the end and run `node upload`. Ensure you're in the `app` directory otherwise adjust the path accordingly.
+To test this, make sure you have `upload();` at the end and run `node upload`. Ensure you're in the `app` directory otherwise adjust the path accordingly. If you run into an error related to .env, please check the path in the `dotenv.config()` function.
 
 If you'd like to access the full documentation on utilizing web3.storage with JavaScript, check out our docs [here](https://web3.storage/docs/w3up-client/).
 
