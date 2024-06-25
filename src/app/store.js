@@ -3,7 +3,10 @@ import path from 'path';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env
+dotenv.config();
 
 // URL of the HTML page to download
 const url = process.env.WEBSITE;

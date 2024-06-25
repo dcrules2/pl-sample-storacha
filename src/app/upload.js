@@ -2,11 +2,11 @@ import { create } from '@web3-storage/w3up-client';
 import { filesFromPaths } from 'files-from-path';
 import fs from 'fs';
 import path from 'path';
-import { config } from 'dotenv';
+import dotenv from 'dotenv';
 
 export default async function upload() {
-  // Load .env file
-  config();
+  // Load environment variables from .env
+  dotenv.config();  
 
   // Create Client
   const client = await create();
