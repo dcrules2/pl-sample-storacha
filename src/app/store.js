@@ -3,9 +3,13 @@ import path from 'path';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env in root directory
+dotenv.config({ path: '../.env' }); //will need to change this path if running from this directory
 
 // URL of the HTML page to download
-const url = 'https://http.cat/';
+const url = process.env.WEBSITE;
 
 // Create __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);

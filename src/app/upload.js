@@ -2,16 +2,21 @@ import { create } from '@web3-storage/w3up-client';
 import { filesFromPaths } from 'files-from-path';
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
 
 export default async function upload() {
+  // Load environment variables from .env in root directory
+  //Will need to change this path if running from this directory vs src
+  dotenv.config({ path: '../.env' }); 
+
   // Create Client
   const client = await create();
 
   // Log into account
-  const myAccount = await client.login('jamie.david312@gmail.com');
+  const myAccount = await client.login(process.env.EMAIL);
 
   // Set space
-  await client.setCurrentSpace("did:key:z6Mkqa5W7JZQLuQ1TmmS5o1om5B2KRWZncxnwbCLFWrJm44C");
+  await client.setCurrentSpace(process.env.SPACE);
 
   // Function to recursively get all file paths from a directory
   async function getAllFilePaths(dirPath) {

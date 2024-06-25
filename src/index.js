@@ -1,12 +1,11 @@
 /* 
 The index.js File will execute both components. 
 
-First the store.js that will download:
-    HTML 
-    CSS 
-    Cat Images (only)
+First the store.js that will download HTML and scrape resources.
 
 Second the upload.js will take the downloaded files & upload to as a directory to web3.storage
+
+A link to the directory will be returned in the console.
 */
 
 import store from '../src/app/store.js';

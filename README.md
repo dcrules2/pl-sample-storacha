@@ -11,14 +11,14 @@ Node.js version 18 or higher and npm version 7 or higher to complete this guide.
 ```node --version && npm --version```
 
 Install the following dependencies:
-- `@web3-storage/w3cli` IPFS Client
-- `fs` File System
-- `axios` HTTP Requests
-- `cheerio` HTML Parser
-- `files-from-path` Directory Parser
-
+- `@web3-storage/w3cli` //IPFS Client
+- `fs` //File System
+- `axios` //HTTP Requests
+- `cheerio` //HTML Parser
+- `files-from-path` //Directory Parser
+- `dotenv` //Environment Variables
 ```
-npm install @web3-storage/w3up-client fs axios cheerio files-from-path
+npm install @web3-storage/w3up-client fs axios cheerio files-from-path dotenv
 ```
 
  ## Set Up
@@ -36,11 +36,7 @@ Check your `package.json` look similar to this. Take note that I have `"type": "
   "type": "module",
   "description": "",
   "main": "src/index.js",
-  "scripts": {
-    "start": "node src/index.js",
-    "store": "node src/app/store.js",
-    "upload": "node src/app/upload.js"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -48,6 +44,7 @@ Check your `package.json` look similar to this. Take note that I have `"type": "
     "@web3-storage/w3up-client": "^14.1.1",
     "axios": "^1.7.2",
     "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.4.5",
     "files-from-path": "^1.0.4",
     "formdata-node": "^6.0.3"
   }
@@ -60,8 +57,10 @@ When you're done your file directory should look similar to this. You can use th
 ├── node_modules
 ├── src
 │   ├── app
-│   ├── store.js
-│   └── upload.js
+│   │   ├── store.js
+│   │   └── upload.js
+│   └── index.js
+├── .env
 ├── .gitattributes
 ├── .gitignore
 ├── LICENSE
@@ -110,9 +109,13 @@ import path from 'path';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env in root directory
+dotenv.config({ path: '../.env' }); //will need to change this path if running from this directory
 
 // URL of the HTML page to download
-const url = 'https://http.cat/';
+const url = process.env.WEBSITE;
 
 // Create __filename and __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -260,7 +263,7 @@ export default async function store() {
 }
 ```
 
-To test this, make sure you have `store();` at the end. Then you can run either run `node store.js` or `npm run store`.
+To test this, make sure you have `store();` at the end and run `node store`. Ensure you're in the `app` directory otherwise adjust the path accordingly. If you run into an error related to .env, please check the path in the `dotenv.config()` function.
 
 ## Upload to IPFS
 
@@ -301,16 +304,21 @@ import { create } from '@web3-storage/w3up-client';
 import { filesFromPaths } from 'files-from-path';
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
 
 export default async function upload() {
+  // Load environment variables from .env in root directory
+  //Will need to change this path if running from this directory vs src
+  dotenv.config({ path: '../.env' }); 
+
   // Create Client
   const client = await create();
 
   // Log into account
-  const myAccount = await client.login('jamie.david312@gmail.com');
+  const myAccount = await client.login(process.env.EMAIL);
 
   // Set space
-  await client.setCurrentSpace("did:key:z6Mkqa5W7JZQLuQ1TmmS5o1om5B2KRWZncxnwbCLFWrJm44C");
+  await client.setCurrentSpace(process.env.SPACE);
 
   // Function to recursively get all file paths from a directory
   async function getAllFilePaths(dirPath) {
@@ -355,7 +363,7 @@ export default async function upload() {
 }
 ```
 
-To test this, make sure you have `upload();` at the end. Then  can run either run `node upload.js` or `npm run upload`
+To test this, make sure you have `upload();` at the end and run `node upload`. Ensure you're in the `app` directory otherwise adjust the path accordingly. If you run into an error related to .env, please check the path in the `dotenv.config()` function.
 
 If you'd like to access the full documentation on utilizing web3.storage with JavaScript, check out our docs [here](https://web3.storage/docs/w3up-client/).
 
@@ -381,7 +389,7 @@ export default async function run() {
 run();
 ```
 
-You run this either with `node src/index.js` or `npm run start`.
+To start, run `node index`. Ensure you're in the `src` directory otherwise adjust the path accordingly.
 
 ## Summary
 If you enjoyed this guide, give this repo a star. Feel free to fork and customize. Feel free to make a PR to add your repo to this table for others to reference and check out.
