@@ -11,11 +11,11 @@ Node.js version 18 or higher and npm version 7 or higher to complete this guide.
 ```node --version && npm --version```
 
 Install the following dependencies:
-- `@web3-storage/w3cli` //IPFS Client
-- `fs` //File System
-- `axios` //HTTP Requests
-- `cheerio` //HTML Parser
-- `files-from-path` //Directory Parser
+- `@web3-storage/w3cli` IPFS Client
+- `fs` File System
+- `axios` HTTP Requests
+- `cheerio` HTML Parser
+- `files-from-path` Directory Parser
 
 ```
 npm install @web3-storage/w3up-client fs axios cheerio files-from-path
