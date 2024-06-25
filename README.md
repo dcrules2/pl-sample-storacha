@@ -71,6 +71,13 @@ When you're done your file directory should look similar to this. You can use th
 └── README.md
 ```
 
+Make sure your `.env` file it ready to go with the variable you need. This allows this project to be dynamic to use other accounts or upload other websites without hardcode changes. This is a sample of what your env file could look like. You can find the sample file to adjust [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/.env.example).
+```
+WEBSITE='https://http.cat' # Example: https://http.cat/
+EMAIL='thisismyemail123@mail.co' # Use the email address you used to create your Web3.Storage account
+SPACE="did:key:1234..." # Follow the format did:key:x0xyz...
+```
+
 ## Extract Website's Data
 
 Next we'll create functions to download and store a websites contents. In these examples, we will be downloading the contents of `https://http.cat/` and storing them in a `temp` folder. Below is an overview of what we are doing and what part of the stack we use to accomplish this.
