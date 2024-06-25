@@ -37,11 +37,7 @@ Check your `package.json` look similar to this. Take note that I have `"type": "
   "type": "module",
   "description": "",
   "main": "src/index.js",
-  "scripts": {
-    "start": "node src/index.js",
-    "store": "node src/app/store.js",
-    "upload": "node src/app/upload.js"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -64,6 +60,7 @@ When you're done your file directory should look similar to this. You can use th
 │   ├── app
 │   ├── store.js
 │   └── upload.js
+├── .env
 ├── .gitattributes
 ├── .gitignore
 ├── LICENSE
@@ -113,6 +110,10 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { fileURLToPath } from 'url';
 import { config } from 'dotenv';
+
+// Load environment variables from .env in root directory
+//Will need to change this path if running from this directory vs src
+dotenv.config({ path: '../.env' }); 
 
 // URL of the HTML page to download
 const url = process.env.WEBSITE; //We are using 'https://http.cat/' as an example
@@ -263,7 +264,7 @@ export default async function store() {
 }
 ```
 
-To test this, make sure you have `store();` at the end. Then you can run either run `node store.js` or `npm run store`.
+To test this, make sure you have `store();` at the end and run `node store`. Ensure you're in the `app` directory otherwise adjust the path accordingly.
 
 ## Upload to IPFS
 
@@ -306,6 +307,10 @@ import fs from 'fs';
 import path from 'path';
 
 export default async function upload() {
+  // Load environment variables from .env in root directory
+  //Will need to change this path if running from this directory vs src
+  dotenv.config({ path: '../.env' }); 
+
   // Create Client
   const client = await create();
 
@@ -358,7 +363,7 @@ export default async function upload() {
 }
 ```
 
-To test this, make sure you have `upload();` at the end. Then  can run either run `node upload.js` or `npm run upload`
+To test this, make sure you have `upload();` at the end and run `node upload`. Ensure you're in the `app` directory otherwise adjust the path accordingly.
 
 If you'd like to access the full documentation on utilizing web3.storage with JavaScript, check out our docs [here](https://web3.storage/docs/w3up-client/).
 
@@ -384,7 +389,7 @@ export default async function run() {
 run();
 ```
 
-You run this either with `node src/index.js` or `npm run start`.
+To start, run `node upload`. Ensure you're in the `src` directory otherwise adjust the path accordingly.
 
 ## Summary
 If you enjoyed this guide, give this repo a star. Feel free to fork and customize. Feel free to make a PR to add your repo to this table for others to reference and check out.
