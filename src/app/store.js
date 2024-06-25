@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 
 // Load environment variables from .env in root directory
-dotenv.config({ path: '../.env' });
+dotenv.config({ path: '../.env' }); //will need to change this path if running from this directory
 
 // URL of the HTML page to download
 const url = process.env.WEBSITE;

@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 export default async function upload() {
   // Load environment variables from .env in root directory
-  dotenv.config({ path: '../.env' });
+  dotenv.config({ path: '../.env' }); //will need to change this path if running from this directory
 
   // Create Client
   const client = await create();
