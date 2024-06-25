@@ -4,6 +4,8 @@ web3.storage (Storacha) has robust tools to upload anything to IPFS. Use this gu
 
 Access the full assignment requirements [here](https://github.com/dcrules2/pl-sample-storacha/blob/main/assignment-instructions.txt).
 
+Watch an overivew video [here](https://youtu.be/L5lRFuPl47c).
+
 ## Dependancies
 
 Node.js version 18 or higher and npm version 7 or higher to complete this guide. 
