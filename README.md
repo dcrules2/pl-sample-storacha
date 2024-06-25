@@ -390,7 +390,7 @@ export default async function run() {
 run();
 ```
 
-To start, run `node upload`. Ensure you're in the `src` directory otherwise adjust the path accordingly.
+To start, run `node index`. Ensure you're in the `src` directory otherwise adjust the path accordingly.
 
 ## Summary
 If you enjoyed this guide, give this repo a star. Feel free to fork and customize. Feel free to make a PR to add your repo to this table for others to reference and check out.
