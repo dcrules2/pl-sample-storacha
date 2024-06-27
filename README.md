@@ -274,6 +274,8 @@ export default async function store() {
 
 To test this, make sure you have `store();` at the end and run `node store`. Ensure you're in the `app` directory otherwise adjust the path accordingly. If you run into an error related to .env, please check the path in the `dotenv.config()` function.
 
+After running this, your assets will be store in a `temp` folder containing the `index.html` and an `assets` folder containing images, css, and scripts.
+
 ## Upload to IPFS
 
 *Note: This code has been made under the assumption you already have an account and a space created. If you need to learn how to make an account or create a space, please reference these [docs](https://web3.storage/docs/quickstart/).*
